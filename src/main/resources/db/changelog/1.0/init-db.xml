@@ -93,4 +93,10 @@
         <modifyDataType tableName="product" columnName="thumbs" newDataType="text"/>
     </changeSet>
 
+    <changeSet id="13.04.22-changeTypes" author="mmenshikov">
+        <modifyDataType tableName="product" columnName="size" newDataType="text"/>
+        <modifyDataType tableName="category" columnName="id" newDataType="bigserial"/>
+        <modifyDataType tableName="order" columnName="id" newDataType="bigserial"/>
+    </changeSet>
+
 </databaseChangeLog>
