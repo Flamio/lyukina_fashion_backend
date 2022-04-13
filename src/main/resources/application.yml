@@ -1,0 +1,28 @@
+server:
+  servlet:
+    context-path: "/api"
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lyukina_fashion_store
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+
+data-store:
+  path: "D:\\pic_store"
+
+products:
+  items-on-page: 5
+
+logging:
+  level:
+    ROOT: debug

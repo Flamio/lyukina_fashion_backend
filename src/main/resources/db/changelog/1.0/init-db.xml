@@ -1,0 +1,96 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="12.04.22-init" author="mmenshikov">
+
+        <createTable tableName="category">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_new" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="product">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="price" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="size" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="availableSizes" type="text[]">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="main_pic" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="thumbs" type="text[]">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="big_pics" type="text[]">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_new" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="category_id" type="bigint"/>
+
+        </createTable>
+
+        <createTable tableName="order">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint"/>
+            <column name="phone" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product" baseColumnNames="category_id"
+                                 constraintName="product_id_category_id"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="order" baseColumnNames="product_id"
+                                 constraintName="order_id_product_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="12.04.22-renameSizesColumn" author="mmenshikov">
+        <renameColumn tableName="product" oldColumnName="availableSizes" newColumnName="available_sizes"/>
+    </changeSet>
+
+    <changeSet id="12.04.22-removeArrays" author="mmenshikov">
+        <modifyDataType tableName="product" columnName="available_sizes" newDataType="text"/>
+        <modifyDataType tableName="product" columnName="big_pics" newDataType="text"/>
+        <modifyDataType tableName="product" columnName="thumbs" newDataType="text"/>
+    </changeSet>
+
+</databaseChangeLog>
