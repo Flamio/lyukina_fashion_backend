@@ -35,6 +35,8 @@ public class Product {
     @Column(name = "big_pics")
     private String bigPictures;
 
+    private String thumbs;
+
     private Boolean isNew;
 
     @ManyToOne
