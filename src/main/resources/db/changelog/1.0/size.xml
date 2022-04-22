@@ -1,0 +1,64 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="22-04-22-refactor-sizes" author="mmenshikov">
+        <dropColumn tableName="product" columnName="size"/>
+        <dropColumn tableName="product" columnName="available_sizes"/>
+
+        <createTable tableName="size">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="product_size">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="size_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="product_size" baseColumnNames="product_id"
+                                 constraintName="product_size_product_id_product_id"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="product_size" baseColumnNames="size_id"
+                                 constraintName="product_size_size_id_size_id"
+                                 referencedTableName="size"
+                                 referencedColumnNames="id"
+                                 onUpdate="CASCADE"/>
+
+        <insert tableName="size">
+            <column name="id" value="1"/>
+            <column name="name" value="XS"/>
+        </insert>
+        <insert tableName="size">
+            <column name="id" value="2"/>
+            <column name="name" value="S"/>
+        </insert>
+        <insert tableName="size">
+            <column name="id" value="3"/>
+            <column name="name" value="M"/>
+        </insert>
+        <insert tableName="size">
+            <column name="id" value="4"/>
+            <column name="name" value="L"/>
+        </insert>
+        <insert tableName="size">
+            <column name="id" value="5"/>
+            <column name="name" value="XL"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -25,10 +26,6 @@ public class Product {
 
     private BigDecimal price;
 
-    private String size;
-
-    private String availableSizes;
-
     @Column(name = "main_pic")
     private String mainPicture;
 
@@ -42,5 +39,10 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    private String description;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductSize> productSizes;
 
 }

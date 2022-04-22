@@ -99,4 +99,10 @@
         <modifyDataType tableName="order" columnName="id" newDataType="bigserial"/>
     </changeSet>
 
+    <changeSet id="22.04.22-add_product_description" author="mmenshikov">
+        <addColumn tableName="product">
+            <column name="description" type="text"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
