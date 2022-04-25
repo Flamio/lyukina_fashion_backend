@@ -25,4 +25,4 @@ products:
 
 logging:
   level:
-    ROOT: debug
+    ROOT: info

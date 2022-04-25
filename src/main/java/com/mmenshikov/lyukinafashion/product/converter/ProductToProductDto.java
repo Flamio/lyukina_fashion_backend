@@ -5,7 +5,7 @@ import com.mmenshikov.lyukinafashion.product.domain.entity.Product;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
+
 
 @Component
 public class ProductToProductDto implements Converter<Product, ProductDto> {
@@ -19,11 +19,6 @@ public class ProductToProductDto implements Converter<Product, ProductDto> {
                 .setPrice(source.getPrice())
                 .setIsNew(source.getIsNew())
                 .setBigPictures(source.getBigPictures())
-                .setThumbs(source.getThumbs())
-                .setSizes(source
-                        .getProductSizes()
-                        .stream()
-                        .map(productSize -> productSize.getSize().getName())
-                        .collect(Collectors.toList()));
+                .setThumbs(source.getThumbs());
     }
 }

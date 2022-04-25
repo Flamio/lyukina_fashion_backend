@@ -19,7 +19,7 @@ public class ProductDto {
     @JsonProperty("new")
     private Boolean isNew;
 
-    private List<String> sizes;
+    private List<SizeDto> sizes;
 
     @JsonProperty("big_pics")
     private String bigPictures;
