@@ -25,4 +25,6 @@ public class ProductDto {
     private String bigPictures;
 
     private String thumbs;
+
+    private String description;
 }

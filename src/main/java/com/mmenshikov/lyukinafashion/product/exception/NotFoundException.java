@@ -8,4 +8,8 @@ public class NotFoundException extends RuntimeException{
     public NotFoundException(final Long id) {
         super("product with id " + id+ " not found");
     }
+
+    public NotFoundException(final String pageName) {
+        super("product with pageName " + pageName + " not found");
+    }
 }

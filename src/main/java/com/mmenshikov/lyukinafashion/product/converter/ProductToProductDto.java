@@ -19,6 +19,7 @@ public class ProductToProductDto implements Converter<Product, ProductDto> {
                 .setPrice(source.getPrice())
                 .setIsNew(source.getIsNew())
                 .setBigPictures(source.getBigPictures())
-                .setThumbs(source.getThumbs());
+                .setThumbs(source.getThumbs())
+                .setDescription(source.getDescription());
     }
 }

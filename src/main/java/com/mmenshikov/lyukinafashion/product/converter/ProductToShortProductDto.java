@@ -15,6 +15,7 @@ public class ProductToShortProductDto implements Converter<Product, ProductShort
                 .setName(source.getName())
                 .setPicture(source.getMainPicture())
                 .setPrice(source.getPrice())
-                .setIsNew(source.getIsNew());
+                .setIsNew(source.getIsNew())
+                .setPageName(source.getPageName());
     }
 }

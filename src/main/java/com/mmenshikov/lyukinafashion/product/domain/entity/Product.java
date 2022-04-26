@@ -34,7 +34,11 @@ public class Product {
 
     private String thumbs;
 
+    @Column(name = "is_new")
     private Boolean isNew;
+
+    @Column(name = "page_name")
+    private String pageName;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)

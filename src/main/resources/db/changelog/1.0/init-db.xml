@@ -101,8 +101,20 @@
 
     <changeSet id="22.04.22-add_product_description" author="mmenshikov">
         <addColumn tableName="product">
-            <column name="description" type="text"/>
+            <column name="description" type="text" />
         </addColumn>
+    </changeSet>
+
+    <changeSet id="26.04.22-addPageName" author="mmenshikov">
+        <addColumn tableName="product">
+            <column name="page_name" type="varchar(20)" defaultValue="-">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="26.04.22-page_name_unique" author="mmenshikov">
+        <addUniqueConstraint tableName="product" columnNames="page_name"/>
     </changeSet>
 
 </databaseChangeLog>

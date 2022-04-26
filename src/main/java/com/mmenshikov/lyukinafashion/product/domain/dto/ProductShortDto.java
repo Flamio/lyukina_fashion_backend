@@ -17,4 +17,6 @@ public class ProductShortDto {
 
     @JsonProperty("new")
     private Boolean isNew;
+
+    private String pageName;
 }

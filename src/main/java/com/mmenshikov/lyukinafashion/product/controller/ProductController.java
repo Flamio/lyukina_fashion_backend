@@ -23,6 +23,11 @@ public class ProductController {
         return productService.get(id);
     }
 
+    @GetMapping("by-page-name/{pageName}")
+    public ProductDto getByPageName(@PathVariable String pageName) {
+        return productService.getByPageName(pageName);
+    }
+
     @GetMapping("{id}/sizes")
     public List<SizeDto> getSizes(@PathVariable Long id) {
         return productService.getSizes(id);

@@ -20,13 +20,7 @@ public class ProductService {
 
     public ProductDto get(Long id) {
         final Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-        final ProductDto productDto = conversionService.convert(product, ProductDto.class);
-        final List<SizeDto> sizeDtoList = product.getProductSizes()
-                .stream()
-                .map(productSize -> conversionService.convert(productSize, SizeDto.class))
-                .collect(Collectors.toList());
-        productDto.setSizes(sizeDtoList);
-        return productDto;
+        return convertToDto(product);
     }
 
     public List<SizeDto> getSizes(Long id) {
@@ -35,5 +29,21 @@ public class ProductService {
                 .stream()
                 .map(productSize -> conversionService.convert(productSize, SizeDto.class))
                 .collect(Collectors.toList());
+    }
+
+    public ProductDto getByPageName(final String pageName) {
+        final Product product = productRepository.findByPageName(pageName)
+                .orElseThrow(() -> new NotFoundException(pageName));
+        return convertToDto(product);
+    }
+
+    private ProductDto convertToDto(final Product product) {
+        final ProductDto productDto = conversionService.convert(product, ProductDto.class);
+        final List<SizeDto> sizeDtoList = product.getProductSizes()
+                .stream()
+                .map(productSize -> conversionService.convert(productSize, SizeDto.class))
+                .collect(Collectors.toList());
+        productDto.setSizes(sizeDtoList);
+        return productDto;
     }
 }
