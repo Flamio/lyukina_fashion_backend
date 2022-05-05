@@ -23,6 +23,9 @@ public class ProductController {
         return productService.get(id);
     }
 
+    @GetMapping("list/{ids}")
+    public List<ProductDto> getList(@PathVariable List<Long> ids) {return productService.getList(ids); }
+
     @GetMapping("by-page-name/{pageName}")
     public ProductDto getByPageName(@PathVariable String pageName) {
         return productService.getByPageName(pageName);

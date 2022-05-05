@@ -46,4 +46,11 @@ public class ProductService {
         productDto.setSizes(sizeDtoList);
         return productDto;
     }
+
+    public List<ProductDto> getList(List<Long> ids) {
+        final List<Product> products = productRepository.findAllByIds(ids);
+        return products.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
 }
