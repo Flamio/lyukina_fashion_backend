@@ -27,4 +27,7 @@ public class ProductDto {
     private String thumbs;
 
     private String description;
+
+    @JsonProperty("page_name")
+    private String pageName;
 }

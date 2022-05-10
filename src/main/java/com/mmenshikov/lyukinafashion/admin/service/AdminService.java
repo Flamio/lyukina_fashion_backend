@@ -1,6 +1,8 @@
 package com.mmenshikov.lyukinafashion.admin.service;
 
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
+import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryForm;
+import com.mmenshikov.lyukinafashion.category.service.CategoryService;
 import com.mmenshikov.lyukinafashion.product.domain.dto.ProductForm;
 import com.mmenshikov.lyukinafashion.product.service.ProductService;
 import com.mmenshikov.lyukinafashion.storage.service.ImageService;
@@ -22,6 +24,7 @@ public class AdminService {
     private final ImageService imageService;
     private final ProductService productService;
     private final ConversionService conversionService;
+    private final CategoryService categoryService;
 
     public void uploadProduct(final List<MultipartFile> bigPics,
                               final List<MultipartFile> thumbs,
@@ -49,5 +52,9 @@ public class AdminService {
         productForm.setBigPictures(String.join(",", bigPicsPaths).replace('\\', '/'));
 
         productService.addProduct(productForm);
+    }
+
+    public Long addCategory(final CategoryForm categoryForm) {
+        return categoryService.addCategory(categoryForm);
     }
 }

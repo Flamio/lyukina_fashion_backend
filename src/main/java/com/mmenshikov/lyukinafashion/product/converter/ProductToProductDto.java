@@ -20,6 +20,7 @@ public class ProductToProductDto implements Converter<Product, ProductDto> {
                 .setIsNew(source.getIsNew())
                 .setBigPictures(source.getBigPictures())
                 .setThumbs(source.getThumbs())
-                .setDescription(source.getDescription());
+                .setDescription(source.getDescription())
+                .setPageName(source.getPageName());
     }
 }

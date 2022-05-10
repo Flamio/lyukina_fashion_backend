@@ -1,4 +1,4 @@
-package com.mmenshikov.lyukinafashion.category.converter.converter;
+package com.mmenshikov.lyukinafashion.category.converter;
 
 import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.category.domain.entity.Category;

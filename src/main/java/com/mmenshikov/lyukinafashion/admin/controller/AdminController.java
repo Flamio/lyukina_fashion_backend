@@ -2,6 +2,7 @@ package com.mmenshikov.lyukinafashion.admin.controller;
 
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
 import com.mmenshikov.lyukinafashion.admin.service.AdminService;
+import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,10 @@ public class AdminController {
                               @RequestPart("product-dto") ProductUploadDto productDto
     ) {
         adminService.uploadProduct(bigPics, thumbs, mainPic, productDto);
+    }
+
+    @PostMapping("add-category")
+    public Long addCategory(@RequestBody CategoryForm categoryForm) {
+        return adminService.addCategory(categoryForm);
     }
 }
