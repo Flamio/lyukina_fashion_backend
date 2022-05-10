@@ -20,10 +20,16 @@ public class ProductSize {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
     private Product product;
 
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
     @ManyToOne
-    @JoinColumn(name = "size_id", nullable = false)
+    @JoinColumn(name = "size_id", nullable = false, insertable = false, updatable = false)
     private Size size;
+
+    @Column(name = "size_id", nullable = false)
+    private Long sizeId;
 }

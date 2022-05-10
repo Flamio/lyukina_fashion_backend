@@ -41,8 +41,11 @@ public class Product {
     private String pageName;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false, insertable = false, updatable = false)
     private Category category;
+
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 
     private String description;
 
