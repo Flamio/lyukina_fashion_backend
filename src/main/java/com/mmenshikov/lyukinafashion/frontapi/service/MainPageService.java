@@ -26,9 +26,11 @@ public class MainPageService {
     private final ConversionService conversionService;
     private final CategoryService categoryService;
 
-    public MainPageDto getMainPage(final Integer productsPage) {
+    public MainPageDto getMainPage(final Integer productsPage, final Long categoryId) {
         final PageRequest pageRequest = PageRequest.of(productsPage, productsConfig.getItemsOnPage());
-        final Page<Product> productPage = productRepository.findAll(pageRequest);
+        final Page<Product> productPage = categoryId == null ?
+                productRepository.findAll(pageRequest) :
+                productRepository.findAllByCategoryId(pageRequest, categoryId);
         final List<Product> newProducts = productRepository.findProductsByIsNewTrue();
 
         final List<ProductShortDto> newProductsConverted = newProducts.stream()

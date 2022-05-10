@@ -16,7 +16,8 @@ public class MainPageController {
     private final MainPageService mainPageService;
 
     @GetMapping("")
-    public MainPageDto mainPage(@RequestParam Integer productsPage) {
-        return mainPageService.getMainPage(productsPage);
+    public MainPageDto mainPage(@RequestParam Integer productsPage,
+                                @RequestParam(required = false) Long categoryId) {
+        return mainPageService.getMainPage(productsPage, categoryId);
     }
 }
