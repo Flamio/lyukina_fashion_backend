@@ -1,7 +1,6 @@
 package com.mmenshikov.lyukinafashion.frontapi.service;
 
 import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryDto;
-import com.mmenshikov.lyukinafashion.category.repository.CategoryRepository;
 import com.mmenshikov.lyukinafashion.category.service.CategoryService;
 import com.mmenshikov.lyukinafashion.frontapi.domain.dto.MainPageDto;
 import com.mmenshikov.lyukinafashion.product.config.ProductsConfig;

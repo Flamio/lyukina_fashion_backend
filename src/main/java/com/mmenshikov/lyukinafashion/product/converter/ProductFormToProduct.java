@@ -18,6 +18,7 @@ public class ProductFormToProduct implements Converter<ProductForm, Product> {
                 .setName(source.getName())
                 .setThumbs(source.getThumbs())
                 .setPageName(source.getPageName())
-                .setPrice(source.getPrice());
+                .setPrice(source.getPrice())
+                .setCartThumb(source.getCartThumb());
     }
 }

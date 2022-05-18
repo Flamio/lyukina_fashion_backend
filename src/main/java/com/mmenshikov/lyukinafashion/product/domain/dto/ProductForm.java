@@ -23,6 +23,8 @@ public class ProductForm {
 
     private String thumbs;
 
+    private String cartThumb;
+
     private String description;
     private String pageName;
 }

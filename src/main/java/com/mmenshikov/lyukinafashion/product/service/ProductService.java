@@ -1,5 +1,6 @@
 package com.mmenshikov.lyukinafashion.product.service;
 
+import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.product.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.product.domain.dto.ProductForm;
 import com.mmenshikov.lyukinafashion.product.domain.dto.SizeDto;
@@ -30,6 +31,13 @@ public class ProductService {
         return convertToDto(product);
     }
 
+    public List<ProductDto> getAll() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     public List<SizeDto> getSizes(Long id) {
         final Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
         return product.getProductSizes()
@@ -45,12 +53,14 @@ public class ProductService {
     }
 
     private ProductDto convertToDto(final Product product) {
+        final CategoryDto categoryDto = conversionService.convert(product.getCategory(), CategoryDto.class);
         final ProductDto productDto = conversionService.convert(product, ProductDto.class);
         final List<SizeDto> sizeDtoList = product.getProductSizes()
                 .stream()
                 .map(productSize -> conversionService.convert(productSize, SizeDto.class))
                 .collect(Collectors.toList());
         productDto.setSizes(sizeDtoList);
+        productDto.setCategory(categoryDto);
         return productDto;
     }
 

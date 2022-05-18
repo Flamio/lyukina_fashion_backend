@@ -117,4 +117,12 @@
         <addUniqueConstraint tableName="product" columnNames="page_name"/>
     </changeSet>
 
+    <changeSet id="15.05.22-add_cart_thumb" author="mmenshikov">
+        <addColumn tableName="product">
+            <column name="cart_thumb" type="varchar(100)" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

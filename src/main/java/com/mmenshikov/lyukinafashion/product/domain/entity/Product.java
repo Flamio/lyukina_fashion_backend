@@ -34,6 +34,9 @@ public class Product {
 
     private String thumbs;
 
+    @Column(name = "cart_thumb")
+    private String cartThumb;
+
     @Column(name = "is_new")
     private Boolean isNew;
 

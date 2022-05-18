@@ -3,6 +3,7 @@ package com.mmenshikov.lyukinafashion.admin.service;
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
 import com.mmenshikov.lyukinafashion.category.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.category.service.CategoryService;
+import com.mmenshikov.lyukinafashion.product.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.product.domain.dto.ProductForm;
 import com.mmenshikov.lyukinafashion.product.service.ProductService;
 import com.mmenshikov.lyukinafashion.storage.service.ImageService;
@@ -29,12 +30,17 @@ public class AdminService {
     public void uploadProduct(final List<MultipartFile> bigPics,
                               final List<MultipartFile> thumbs,
                               final MultipartFile mainPic,
+                              final MultipartFile cartThumb,
                               final ProductUploadDto productDto) {
 
         final String newProductDirectoryName = UUID.randomUUID().toString();
 
         final String mainPicPath = imageService.uploadImages(List.of(mainPic),
                 Path.of(newProductDirectoryName)).get(0);
+
+        final String cartThumbPath = imageService.uploadImages(List.of(cartThumb),
+                Path.of(newProductDirectoryName)).get(0);
+
         final List<String> thumbsPaths = imageService.uploadImages(thumbs,
                 Path.of(newProductDirectoryName, ImageService.THUMBS_DIRECTORY_NAME));
         final List<String> bigPicsPaths = imageService.uploadImages(bigPics,
@@ -50,11 +56,15 @@ public class AdminService {
         productForm.setPicture(mainPicPath.replace('\\', '/'));
         productForm.setThumbs(String.join(",", thumbsPaths).replace('\\', '/'));
         productForm.setBigPictures(String.join(",", bigPicsPaths).replace('\\', '/'));
-
+        productForm.setCartThumb(cartThumbPath.replace('\\', '/'));
         productService.addProduct(productForm);
     }
 
     public Long addCategory(final CategoryForm categoryForm) {
         return categoryService.addCategory(categoryForm);
+    }
+
+    public List<ProductDto> getAllProducts() {
+        return productService.getAll();
     }
 }

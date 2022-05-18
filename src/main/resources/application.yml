@@ -29,7 +29,7 @@ data-store:
   path: "D:\\pic_store"
 
 products:
-  items-on-page: 5
+  items-on-page: 6
 
 logging:
   level:
