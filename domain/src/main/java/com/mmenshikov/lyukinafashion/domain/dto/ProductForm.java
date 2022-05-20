@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class ProductForm {
+    private Long id;
     private String name;
     private String picture;
     private BigDecimal price;

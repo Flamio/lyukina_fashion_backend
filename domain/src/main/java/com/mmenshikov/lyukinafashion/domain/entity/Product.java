@@ -25,17 +25,6 @@ public class Product {
 
     private BigDecimal price;
 
-    @Column(name = "main_pic")
-    private String mainPicture;
-
-    @Column(name = "big_pics")
-    private String bigPictures;
-
-    private String thumbs;
-
-    @Column(name = "cart_thumb")
-    private String cartThumb;
-
     @Column(name = "is_new")
     private Boolean isNew;
 
@@ -53,5 +42,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductSize> productSizes;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductObject> objects;
 
 }

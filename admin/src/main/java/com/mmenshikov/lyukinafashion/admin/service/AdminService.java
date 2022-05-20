@@ -4,6 +4,7 @@ import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
 import com.mmenshikov.lyukinafashion.interfaces.CategoryService;
 import com.mmenshikov.lyukinafashion.interfaces.ImageService;
 import com.mmenshikov.lyukinafashion.interfaces.ProductService;
@@ -13,6 +14,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -27,25 +29,12 @@ public class AdminService {
     private final ConversionService conversionService;
     private final CategoryService categoryService;
 
+    @Transactional
     public void uploadProduct(final List<MultipartFile> bigPics,
                               final List<MultipartFile> thumbs,
                               final MultipartFile mainPic,
                               final MultipartFile cartThumb,
                               final ProductUploadDto productDto) {
-
-        final String newProductDirectoryName = UUID.randomUUID().toString();
-
-        final String mainPicPath = imageService.uploadImages(List.of(mainPic),
-                Path.of(newProductDirectoryName)).get(0);
-
-        final String cartThumbPath = imageService.uploadImages(List.of(cartThumb),
-                Path.of(newProductDirectoryName)).get(0);
-
-        final List<String> thumbsPaths = imageService.uploadImages(thumbs,
-                Path.of(newProductDirectoryName, ImageService.THUMBS_DIRECTORY_NAME));
-        final List<String> bigPicsPaths = imageService.uploadImages(bigPics,
-                Path.of(newProductDirectoryName, ImageService.BIG_PICS_DIRECTORY_NAME));
-
 
 
         final ProductForm productForm = conversionService.convert(productDto, ProductForm.class);
@@ -53,11 +42,22 @@ public class AdminService {
             log.error("failed to convert product upload dto to product form");
             return;
         }
-        productForm.setPicture(mainPicPath.replace('\\', '/'));
-        productForm.setThumbs(String.join(",", thumbsPaths).replace('\\', '/'));
-        productForm.setBigPictures(String.join(",", bigPicsPaths).replace('\\', '/'));
-        productForm.setCartThumb(cartThumbPath.replace('\\', '/'));
-        productService.addProduct(productForm);
+
+        var productId = productService.saveProduct(productForm);
+        productForm.setId(productId);
+
+        final String newProductDirectoryName = UUID.randomUUID().toString();
+
+        imageService.uploadImages(List.of(mainPic),
+                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.MAIN_PICTURE);
+        imageService.uploadImages(List.of(cartThumb),
+                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.CART_THUMB);
+        imageService.uploadImages(thumbs,
+                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.THUMB);
+        imageService.uploadImages(bigPics,
+                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.BIG_PICTURE);
+
+
     }
 
     public Long addCategory(final CategoryForm categoryForm) {

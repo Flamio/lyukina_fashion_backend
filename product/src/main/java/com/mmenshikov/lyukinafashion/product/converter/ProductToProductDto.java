@@ -2,9 +2,14 @@ package com.mmenshikov.lyukinafashion.product.converter;
 
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.entity.Product;
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObject;
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -15,13 +20,35 @@ public class ProductToProductDto implements Converter<Product, ProductDto> {
         return new ProductDto()
                 .setId(source.getId())
                 .setName(source.getName())
-                .setPicture(source.getMainPicture())
                 .setPrice(source.getPrice())
+                .setPicture(getObject(source.getObjects(), ProductObjectPurpose.MAIN_PICTURE))
                 .setIsNew(source.getIsNew())
-                .setBigPictures(source.getBigPictures())
-                .setThumbs(source.getThumbs())
+                .setBigPictures(getArrayOfObjects(source.getObjects(), ProductObjectPurpose.BIG_PICTURE))
+                .setThumbs(getArrayOfObjects(source.getObjects(), ProductObjectPurpose.THUMB))
                 .setDescription(source.getDescription())
                 .setPageName(source.getPageName())
-                .setCartThumb(source.getCartThumb());
+                .setCartThumb(getObject(source.getObjects(), ProductObjectPurpose.CART_THUMB));
+    }
+
+    private List<String> getArrayOfObjects(List<ProductObject> objects, ProductObjectPurpose purpose) {
+        return objects
+                .stream()
+                .filter(productObject -> productObject.getPurpose().equals(purpose))
+                .map(productObject -> productObject.getStorageObject().getApiPath())
+                .collect(Collectors.toList());
+    }
+
+    private String getObject(List<ProductObject> objects, ProductObjectPurpose purpose) {
+        var listObjects = objects
+                .stream()
+                .filter(productObject -> productObject.getPurpose().equals(purpose))
+                .map(productObject -> productObject.getStorageObject().getApiPath())
+                .collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(listObjects)) {
+            return null;
+        }
+
+        return listObjects.get(0);
     }
 }

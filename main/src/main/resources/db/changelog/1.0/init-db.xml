@@ -125,4 +125,45 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20.05.22-remove_image_paths" author="mmenshikov">
+        <dropColumn tableName="product" columnName="cart_thumb" />
+        <dropColumn tableName="product" columnName="thumbs" />
+        <dropColumn tableName="product" columnName="big_pics" />
+        <dropColumn tableName="product" columnName="main_pic" />
+
+        <createTable tableName="product_object">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="storage_object_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purpose" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addColumn tableName="storage_object">
+            <column name="api_path" type="text" defaultValue="">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="product_object"
+                                 baseColumnNames="product_id"
+                                 constraintName="product_object_product_id_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="product_object"
+                                 baseColumnNames="storage_object_id"
+                                 constraintName="storage_object_id_fk"
+                                 referencedTableName="storage_object"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
 </databaseChangeLog>

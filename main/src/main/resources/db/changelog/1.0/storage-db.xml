@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="19-05-22-add_storage_db" author="mmenshikov">
+        <createTable tableName="storage_object">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="path" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="storage_object" baseColumnNames="product_id"
+                                 constraintName="storage_object_product_id_product_id_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="20-05-22-removeStorageObjectFk" author="mmenshikov">
+        <dropAllForeignKeyConstraints baseTableName="storage_object"/>
+    </changeSet>
+
+    <changeSet id="20-05-22-removeProductId" author="mmenshikov">
+        <dropColumn tableName="storage_object" columnName="product_id"/>
+    </changeSet>
+</databaseChangeLog>

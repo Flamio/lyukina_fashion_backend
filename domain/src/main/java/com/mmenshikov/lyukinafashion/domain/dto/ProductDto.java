@@ -22,9 +22,9 @@ public class ProductDto {
     private List<SizeDto> sizes;
 
     @JsonProperty("big_pics")
-    private String bigPictures;
+    private List<String> bigPictures;
 
-    private String thumbs;
+    private List<String> thumbs;
 
     @JsonProperty("cart_thumb")
     private String cartThumb;

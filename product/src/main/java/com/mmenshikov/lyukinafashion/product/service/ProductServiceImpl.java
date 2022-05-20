@@ -102,11 +102,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void addProduct(final ProductForm productForm) {
+    public Long saveProduct(final ProductForm productForm) {
         final Product product = conversionService.convert(productForm, Product.class);
         if (product == null) {
             log.error("convert product failed");
-            return;
+            return null;
         }
 
         final Product savedProduct = productRepository.save(product);
@@ -119,5 +119,6 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
 
         productSizeRepository.saveAll(productSizes);
+        return savedProduct.getId();
     }
 }

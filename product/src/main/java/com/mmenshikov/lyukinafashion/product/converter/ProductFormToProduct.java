@@ -10,15 +10,12 @@ public class ProductFormToProduct implements Converter<ProductForm, Product> {
     @Override
     public Product convert(ProductForm source) {
         return new Product()
-                .setBigPictures(source.getBigPictures())
                 .setDescription(source.getDescription())
                 .setCategoryId(source.getCategoryId())
-                .setMainPicture(source.getPicture())
                 .setIsNew(source.getIsNew())
                 .setName(source.getName())
-                .setThumbs(source.getThumbs())
                 .setPageName(source.getPageName())
                 .setPrice(source.getPrice())
-                .setCartThumb(source.getCartThumb());
+                .setId(source.getId());
     }
 }

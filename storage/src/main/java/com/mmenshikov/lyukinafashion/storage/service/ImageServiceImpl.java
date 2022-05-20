@@ -1,9 +1,14 @@
 package com.mmenshikov.lyukinafashion.storage.service;
 
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObject;
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
+import com.mmenshikov.lyukinafashion.domain.entity.StorageObject;
 import com.mmenshikov.lyukinafashion.interfaces.ImageService;
 import com.mmenshikov.lyukinafashion.storage.config.StoreConfiguration;
 import com.mmenshikov.lyukinafashion.storage.exception.ImageNotFoundException;
 import com.mmenshikov.lyukinafashion.storage.exception.ImageUploadException;
+import com.mmenshikov.lyukinafashion.storage.repository.ProductObjectRepository;
+import com.mmenshikov.lyukinafashion.storage.repository.StorageObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +30,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ImageServiceImpl implements ImageService {
 
+    private final static String API_PATH = "/api/img?path=/";
+
     private final StoreConfiguration storeConfiguration;
+    private final StorageObjectRepository storageObjectRepository;
+    private final ProductObjectRepository productObjectRepository;
 
     public Resource get(final String path) {
         final Path fullPath = Path.of(storeConfiguration.getPath(), path);
@@ -41,20 +50,44 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<String> uploadImages(List<MultipartFile> images, Path path) {
+    public void uploadImages(final List<MultipartFile> images,
+                             final Path path,
+                             final Long productId,
+                             final ProductObjectPurpose purpose) {
+
         final Path storePath = Path.of(storeConfiguration.getPath(), path.toString());
         createPath(storePath);
-        return images.stream()
-                .map(multipartFile -> {
-                    final String imageName = UUID.randomUUID().toString();
-                    final Path imagePath = storePath.resolve(imageName);
-                    try {
-                        Files.copy(multipartFile.getInputStream(), imagePath);
-                    } catch (IOException e) {
-                        throwUploadException(e);
-                    }
-                    return API_PATH + Path.of(path.toString(), imageName);
-                }).collect(Collectors.toList());
+        images.forEach(file -> saveFile(file, storePath, path, productId, purpose));
+    }
+
+    private void saveFile(final MultipartFile file,
+                            final Path storePath,
+                            final Path path,
+                            final Long productId,
+                            final ProductObjectPurpose purpose) {
+
+        final String imageName = UUID.randomUUID().toString();
+        final Path imagePath = storePath.resolve(imageName);
+        try {
+            Files.copy(file.getInputStream(), imagePath);
+        } catch (IOException e) {
+            throwUploadException(e);
+        }
+
+        var imageApiPath = API_PATH + Path.of(path.toString(), imageName);
+
+        var storageObject = new StorageObject()
+                .setPath(imagePath.toString())
+                .setApiPath(imageApiPath.replace('\\', '/'));
+
+        final StorageObject savedStorageObject = storageObjectRepository.save(storageObject);
+
+        var productObject = new ProductObject()
+                .setProductId(productId)
+                .setStorageObjectId(savedStorageObject.getId())
+                .setPurpose(purpose);
+
+        productObjectRepository.save(productObject);
     }
 
     private void createPath(Path path) {

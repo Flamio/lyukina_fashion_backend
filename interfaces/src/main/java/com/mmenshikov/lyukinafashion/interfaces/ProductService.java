@@ -16,5 +16,5 @@ public interface ProductService {
     List<SizeDto> getSizes(Long id);
     ProductDto getByPageName(final String pageName);
     List<ProductDto> getList(List<Long> ids);
-    void addProduct(final ProductForm productForm);
+    Long saveProduct(final ProductForm productForm);
 }
