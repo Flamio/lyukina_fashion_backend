@@ -44,6 +44,6 @@ public class Product {
     private List<ProductSize> productSizes;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductObject> objects;
+    private List<StorageObject> objects;
 
 }

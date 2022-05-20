@@ -1,13 +1,11 @@
 package com.mmenshikov.lyukinafashion.storage.service;
 
-import com.mmenshikov.lyukinafashion.domain.entity.ProductObject;
 import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
 import com.mmenshikov.lyukinafashion.domain.entity.StorageObject;
 import com.mmenshikov.lyukinafashion.interfaces.ImageService;
 import com.mmenshikov.lyukinafashion.storage.config.StoreConfiguration;
 import com.mmenshikov.lyukinafashion.storage.exception.ImageNotFoundException;
 import com.mmenshikov.lyukinafashion.storage.exception.ImageUploadException;
-import com.mmenshikov.lyukinafashion.storage.repository.ProductObjectRepository;
 import com.mmenshikov.lyukinafashion.storage.repository.StorageObjectRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +31,6 @@ public class ImageServiceImpl implements ImageService {
 
     private final StoreConfiguration storeConfiguration;
     private final StorageObjectRepository storageObjectRepository;
-    private final ProductObjectRepository productObjectRepository;
 
     public Resource get(final String path) {
         final Path fullPath = Path.of(storeConfiguration.getPath(), path);
@@ -61,10 +57,10 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private void saveFile(final MultipartFile file,
-                            final Path storePath,
-                            final Path path,
-                            final Long productId,
-                            final ProductObjectPurpose purpose) {
+                          final Path storePath,
+                          final Path path,
+                          final Long productId,
+                          final ProductObjectPurpose purpose) {
 
         final String imageName = UUID.randomUUID().toString();
         final Path imagePath = storePath.resolve(imageName);
@@ -78,16 +74,11 @@ public class ImageServiceImpl implements ImageService {
 
         var storageObject = new StorageObject()
                 .setPath(imagePath.toString())
-                .setApiPath(imageApiPath.replace('\\', '/'));
-
-        final StorageObject savedStorageObject = storageObjectRepository.save(storageObject);
-
-        var productObject = new ProductObject()
+                .setApiPath(imageApiPath.replace('\\', '/'))
                 .setProductId(productId)
-                .setStorageObjectId(savedStorageObject.getId())
                 .setPurpose(purpose);
 
-        productObjectRepository.save(productObject);
+        storageObjectRepository.save(storageObject);
     }
 
     private void createPath(Path path) {

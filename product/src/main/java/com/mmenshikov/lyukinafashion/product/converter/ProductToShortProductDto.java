@@ -3,6 +3,7 @@ package com.mmenshikov.lyukinafashion.product.converter;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductShortDto;
 import com.mmenshikov.lyukinafashion.domain.entity.Product;
 import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
+import com.mmenshikov.lyukinafashion.domain.entity.StorageObject;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -17,7 +18,7 @@ public class ProductToShortProductDto implements Converter<Product, ProductShort
         var mainPictures = source.getObjects()
                 .stream()
                 .filter(productObject -> productObject.getPurpose().equals(ProductObjectPurpose.MAIN_PICTURE))
-                .map(productObject -> productObject.getStorageObject().getApiPath())
+                .map(StorageObject::getApiPath)
                 .collect(Collectors.toList());
         return new ProductShortDto()
                 .setId(source.getId())

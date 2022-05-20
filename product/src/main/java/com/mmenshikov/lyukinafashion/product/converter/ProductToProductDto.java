@@ -2,8 +2,8 @@ package com.mmenshikov.lyukinafashion.product.converter;
 
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.entity.Product;
-import com.mmenshikov.lyukinafashion.domain.entity.ProductObject;
 import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
+import com.mmenshikov.lyukinafashion.domain.entity.StorageObject;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -30,19 +30,19 @@ public class ProductToProductDto implements Converter<Product, ProductDto> {
                 .setCartThumb(getObject(source.getObjects(), ProductObjectPurpose.CART_THUMB));
     }
 
-    private List<String> getArrayOfObjects(List<ProductObject> objects, ProductObjectPurpose purpose) {
+    private List<String> getArrayOfObjects(List<StorageObject> objects, ProductObjectPurpose purpose) {
         return objects
                 .stream()
                 .filter(productObject -> productObject.getPurpose().equals(purpose))
-                .map(productObject -> productObject.getStorageObject().getApiPath())
+                .map(StorageObject::getApiPath)
                 .collect(Collectors.toList());
     }
 
-    private String getObject(List<ProductObject> objects, ProductObjectPurpose purpose) {
+    private String getObject(List<StorageObject> objects, ProductObjectPurpose purpose) {
         var listObjects = objects
                 .stream()
                 .filter(productObject -> productObject.getPurpose().equals(purpose))
-                .map(productObject -> productObject.getStorageObject().getApiPath())
+                .map(StorageObject::getApiPath)
                 .collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(listObjects)) {

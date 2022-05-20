@@ -27,4 +27,21 @@
     <changeSet id="20-05-22-removeProductId" author="mmenshikov">
         <dropColumn tableName="storage_object" columnName="product_id"/>
     </changeSet>
+
+    <changeSet id="20-05-22-oneTableForStorage" author="mmenshikov">
+        <dropTable tableName="product_object"/>
+        <addColumn tableName="storage_object">
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="purpose" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="storage_object" baseColumnNames="product_id"
+                                 constraintName="storage_object_product_id_product_id_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>

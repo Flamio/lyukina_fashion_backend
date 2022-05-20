@@ -23,4 +23,14 @@ public class StorageObject {
 
     @Column(name = "api_path")
     private String apiPath;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", updatable = false, insertable = false)
+    private Product product;
+
+    @Column(name = "product_id")
+    private Long productId;
+
+    @Enumerated(EnumType.STRING)
+    private ProductObjectPurpose purpose;
 }
