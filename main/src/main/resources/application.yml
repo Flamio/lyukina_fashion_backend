@@ -28,6 +28,11 @@ spring:
 data-store:
   path: "D:\\pic_store"
 
+security:
+  admin:
+    login: admin
+    password: admin
+
 products:
   items-on-page: 6
 
