@@ -21,6 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -47,30 +49,55 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void uploadImages(final List<MultipartFile> images,
-                             final Path path,
                              final Long productId,
                              final ProductObjectPurpose purpose) {
 
-        final Path storePath = Path.of(storeConfiguration.getPath(), path.toString());
+        var newFolderName = UUID.randomUUID().toString();
+        final Path storePath = Path.of(storeConfiguration.getPath(), newFolderName);
         createPath(storePath);
-        images.forEach(file -> saveFile(file, storePath, path, productId, purpose));
+        images.forEach(file -> saveFile(file, storePath, newFolderName, productId, purpose));
+    }
+
+    @Override
+    public void updateImages(final List<MultipartFile> images,
+                             final Long productId,
+                             final ProductObjectPurpose purpose) {
+
+        final List<StorageObject> objects = storageObjectRepository.findAllByProductId(productId);
+        var oldPurposeObjects = objects.stream()
+                .filter(storageObject -> storageObject.getPurpose().equals(purpose))
+                .collect(Collectors.toList());
+        var folder = Path.of(oldPurposeObjects.get(0).getPath()).getParent();
+        deleteOldImages(oldPurposeObjects);
+        images.forEach(file -> saveFile(file, folder, folder.getFileName().toString(), productId, purpose));
+        storageObjectRepository.deleteAll(oldPurposeObjects);
+    }
+
+    private void deleteOldImages(List<StorageObject> objects) {
+        objects.forEach(storageObject -> {
+            try {
+                Files.delete(Path.of(storageObject.getPath()));
+            } catch (IOException e) {
+                log.error("Failed to delete old image {}", storageObject.getPath(), e);
+            }
+        });
     }
 
     private void saveFile(final MultipartFile file,
-                          final Path storePath,
-                          final Path path,
+                          final Path folderPath,
+                          final String folderName,
                           final Long productId,
                           final ProductObjectPurpose purpose) {
 
         final String imageName = UUID.randomUUID().toString();
-        final Path imagePath = storePath.resolve(imageName);
+        final Path imagePath = folderPath.resolve(imageName);
         try {
             Files.copy(file.getInputStream(), imagePath);
         } catch (IOException e) {
             throwUploadException(e);
         }
 
-        var imageApiPath = API_PATH + Path.of(path.toString(), imageName);
+        var imageApiPath = API_PATH + Path.of(folderName, imageName);
 
         var storageObject = new StorageObject()
                 .setPath(imagePath.toString())

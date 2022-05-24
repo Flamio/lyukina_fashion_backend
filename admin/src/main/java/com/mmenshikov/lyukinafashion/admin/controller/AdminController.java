@@ -24,7 +24,7 @@ public class AdminController {
         return adminService.getAllProducts();
     }
 
-    @PostMapping("product-upload")
+    @PostMapping("products/upload")
     public void uploadProduct(@RequestPart("big-pics") List<MultipartFile> bigPics,
                               @RequestPart("thumbs") List<MultipartFile> thumbs,
                               @RequestPart("main-pic") MultipartFile mainPic,
@@ -35,7 +35,20 @@ public class AdminController {
         adminService.uploadProduct(bigPics, thumbs, mainPic, cartThumb, productDto);
     }
 
-    @PostMapping("add-category")
+    @PutMapping("products/{id}")
+    public void updateProduct(
+            @PathVariable Long id,
+            @RequestPart(name = "big-pics", required = false) List<MultipartFile> bigPics,
+            @RequestPart(name = "thumbs", required = false) List<MultipartFile> thumbs,
+            @RequestPart(name = "main-pic", required = false) MultipartFile mainPic,
+            @RequestPart(name = "cart-thumb", required = false) MultipartFile cartThumb,
+            @RequestPart(name = "product-dto", required = false) ProductUploadDto productDto
+
+    ) {
+        adminService.updateProduct(id, bigPics, thumbs, mainPic, cartThumb, productDto);
+    }
+
+    @PostMapping("category")
     public Long addCategory(@RequestBody CategoryForm categoryForm) {
         return adminService.addCategory(categoryForm);
     }

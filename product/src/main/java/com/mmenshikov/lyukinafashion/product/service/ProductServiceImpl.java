@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.findAll(pageRequest) :
                 productRepository.findAllByCategoryId(pageRequest, categoryId);
 
-        return  Pair.of(productPage.get()
+        return Pair.of(productPage.get()
                 .map(product -> conversionService.convert(product, ProductShortDto.class))
                 .collect(Collectors.toList()), productPage.hasNext());
     }
@@ -111,14 +112,24 @@ public class ProductServiceImpl implements ProductService {
 
         final Product savedProduct = productRepository.save(product);
 
-        final List<ProductSize> productSizes = productForm.getSizeIds()
+        var productSizes = productSizeRepository.findAllByProductId(savedProduct.getId());
+        if (needToDeleteProductSizes(productSizes, productForm.getSizeIds())) {
+            productSizeRepository.deleteAll(productSizes);
+        }
+
+        final List<ProductSize> newProductSizes = productForm.getSizeIds()
                 .stream()
                 .map(sizeId -> new ProductSize()
                         .setProductId(savedProduct.getId())
                         .setSizeId(sizeId))
                 .collect(Collectors.toList());
 
-        productSizeRepository.saveAll(productSizes);
+        productSizeRepository.saveAll(newProductSizes);
         return savedProduct.getId();
+    }
+
+    private boolean needToDeleteProductSizes(final List<ProductSize> productSizes,
+                                             final List<Long> sizeIdsToAdd) {
+        return !CollectionUtils.isEmpty(productSizes) && !CollectionUtils.isEmpty(sizeIdsToAdd);
     }
 }

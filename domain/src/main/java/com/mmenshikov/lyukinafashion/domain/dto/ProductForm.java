@@ -11,7 +11,6 @@ import java.util.List;
 public class ProductForm {
     private Long id;
     private String name;
-    private String picture;
     private BigDecimal price;
 
     private Boolean isNew;
@@ -19,12 +18,6 @@ public class ProductForm {
     private List<Long> sizeIds;
 
     private Long categoryId;
-
-    private String bigPictures;
-
-    private String thumbs;
-
-    private String cartThumb;
 
     private String description;
     private String pageName;

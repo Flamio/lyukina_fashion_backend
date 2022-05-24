@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -44,18 +45,12 @@ public class AdminService {
         }
 
         var productId = productService.saveProduct(productForm);
-        productForm.setId(productId);
 
-        final String newProductDirectoryName = UUID.randomUUID().toString();
 
-        imageService.uploadImages(List.of(mainPic),
-                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.MAIN_PICTURE);
-        imageService.uploadImages(List.of(cartThumb),
-                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.CART_THUMB);
-        imageService.uploadImages(thumbs,
-                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.THUMB);
-        imageService.uploadImages(bigPics,
-                Path.of(newProductDirectoryName), productId, ProductObjectPurpose.BIG_PICTURE);
+        imageService.uploadImages(List.of(mainPic), productId, ProductObjectPurpose.MAIN_PICTURE);
+        imageService.uploadImages(List.of(cartThumb), productId, ProductObjectPurpose.CART_THUMB);
+        imageService.uploadImages(thumbs, productId, ProductObjectPurpose.THUMB);
+        imageService.uploadImages(bigPics, productId, ProductObjectPurpose.BIG_PICTURE);
 
 
     }
@@ -66,5 +61,71 @@ public class AdminService {
 
     public List<ProductDto> getAllProducts() {
         return productService.getAll();
+    }
+
+    @Transactional
+    public void updateProduct(final Long id,
+                              final List<MultipartFile> bigPics,
+                              final List<MultipartFile> thumbs,
+                              final MultipartFile mainPic,
+                              final MultipartFile cartThumb,
+                              final ProductUploadDto productDto) {
+        var existingProduct = productService.get(id);
+        if (existingProduct == null) {
+            var message = "product with id " + id + "not found";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+
+        if (productDto != null) {
+            updateProduct(existingProduct, productDto);
+        }
+
+        if (mainPic != null) {
+            imageService.updateImages(List.of(mainPic), id, ProductObjectPurpose.MAIN_PICTURE);
+        }
+        if (cartThumb != null) {
+            imageService.updateImages(List.of(cartThumb), id, ProductObjectPurpose.CART_THUMB);
+        }
+        if (!CollectionUtils.isEmpty(thumbs)) {
+            imageService.updateImages(thumbs, id, ProductObjectPurpose.THUMB);
+        }
+
+        if (!CollectionUtils.isEmpty(bigPics)) {
+            imageService.updateImages(bigPics, id, ProductObjectPurpose.BIG_PICTURE);
+        }
+    }
+
+    private void updateProduct(final ProductDto existingProduct,
+                               final ProductUploadDto productUploadDto) {
+        var productForm = conversionService.convert(existingProduct, ProductForm.class);
+        if (productForm == null) {
+            var message = "failed to convert product entity to product form";
+            log.error(message);
+            throw new RuntimeException(message);
+        }
+        if (productUploadDto.getCategoryId() != null)
+            productForm.setCategoryId(productUploadDto.getCategoryId());
+
+        if (productUploadDto.getPrice() != null)
+            productForm.setPrice(productUploadDto.getPrice());
+
+        if (productUploadDto.getIsNew() != null)
+            productForm.setIsNew(productUploadDto.getIsNew());
+
+        if (productUploadDto.getPageName() != null)
+            productForm.setPageName(productUploadDto.getPageName());
+
+        if (productUploadDto.getDescription() != null)
+            productForm.setDescription(productUploadDto.getDescription());
+
+        if (productUploadDto.getName() != null)
+            productForm.setName(productUploadDto.getName());
+
+        if (!CollectionUtils.isEmpty(productUploadDto.getSizeIds())) {
+            productForm.setSizeIds(productUploadDto.getSizeIds());
+        }
+
+        productService.saveProduct(productForm);
     }
 }

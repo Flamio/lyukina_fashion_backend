@@ -4,6 +4,7 @@ import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductShortDto;
 import com.mmenshikov.lyukinafashion.domain.dto.SizeDto;
+import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
 import org.springframework.data.util.Pair;
 
 import java.util.List;
