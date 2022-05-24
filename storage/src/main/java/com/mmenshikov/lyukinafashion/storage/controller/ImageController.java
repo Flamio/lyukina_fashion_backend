@@ -20,7 +20,7 @@ public class ImageController {
     private final ImageServiceImpl imageService;
 
     @GetMapping(path = "", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public Resource get(@RequestParam String path) throws FileNotFoundException {
+    public Resource get(@RequestParam String path) {
         return imageService.get(path);
     }
 }

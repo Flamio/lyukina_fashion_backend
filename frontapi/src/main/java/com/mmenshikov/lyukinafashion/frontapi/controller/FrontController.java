@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("main")
-public class MainPageController {
+@RequestMapping("front")
+public class FrontController {
 
     private final MainPageService mainPageService;
 
-    @GetMapping("")
+    @GetMapping("main")
     public MainPageDto mainPage(@RequestParam Integer productsPage,
                                 @RequestParam(required = false) Long categoryId) {
         return mainPageService.getMainPage(productsPage, categoryId);

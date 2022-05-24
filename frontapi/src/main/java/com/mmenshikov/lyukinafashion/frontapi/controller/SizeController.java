@@ -1,7 +1,7 @@
-package com.mmenshikov.lyukinafashion.product.controller;
+package com.mmenshikov.lyukinafashion.frontapi.controller;
 
 import com.mmenshikov.lyukinafashion.domain.dto.SizeDto;
-import com.mmenshikov.lyukinafashion.product.service.SizeService;
+import com.mmenshikov.lyukinafashion.interfaces.SizeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("sizes")
 @RequiredArgsConstructor
+@RequestMapping("front/sizes")
 public class SizeController {
 
     private final SizeService sizeService;
