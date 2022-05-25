@@ -1,0 +1,32 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="24-05-22-refactor-orders" author="mmenshikov">
+        <dropColumn tableName="order" columnName="product_id"/>
+        <createTable tableName="product_order">
+            <column name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product_order" baseColumnNames="product_id"
+                                 constraintName="product_order_product_fk"
+                                 referencedTableName="product"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="product_order" baseColumnNames="order_id"
+                                 constraintName="product_order_order_fk"
+                                 referencedTableName="order"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="25.05.2022-renameOrder" author="mmenshikov">
+        <renameTable oldTableName="order" newTableName="order_data"/>
+    </changeSet>
+</databaseChangeLog>

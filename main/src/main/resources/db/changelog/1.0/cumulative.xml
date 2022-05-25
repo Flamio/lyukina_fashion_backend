@@ -6,5 +6,6 @@
     <include file="/db/changelog/1.0/init-db.xml"/>
     <include file="/db/changelog/1.0/size.xml"/>
     <include file="/db/changelog/1.0/storage-db.xml"/>
+    <include file="/db/changelog/1.0/order.xml"/>
 
 </databaseChangeLog>
