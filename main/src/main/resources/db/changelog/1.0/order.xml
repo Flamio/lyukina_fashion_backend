@@ -29,4 +29,16 @@
     <changeSet id="25.05.2022-renameOrder" author="mmenshikov">
         <renameTable oldTableName="order" newTableName="order_data"/>
     </changeSet>
+
+    <changeSet id="26.05.2022-additionalInfoForOrder" author="mmenshikov">
+        <addColumn tableName="order_data">
+            <column name="size_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(60)"/>
+            <column name="contact_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

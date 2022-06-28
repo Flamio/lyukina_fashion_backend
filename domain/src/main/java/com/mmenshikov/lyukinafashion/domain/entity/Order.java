@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "order_data")
@@ -20,4 +19,15 @@ public class Order {
     private Long id;
     private String phone;
     private String address;
+    private String email;
+
+    @Column(name = "size_id")
+    private Long sizeId;
+
+    @ManyToOne
+    @JoinColumn(name = "size_id", nullable = false, updatable = false)
+    private Size size;
+
+
+    private String contactType;
 }

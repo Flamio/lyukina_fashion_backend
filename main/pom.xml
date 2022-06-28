@@ -44,6 +44,11 @@
         </dependency>
         <dependency>
             <groupId>com.mmenshikov</groupId>
+            <artifactId>notification</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mmenshikov</groupId>
             <artifactId>order</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

@@ -39,3 +39,6 @@ products:
 logging:
   level:
     ROOT: info
+
+notification:
+  email-from:

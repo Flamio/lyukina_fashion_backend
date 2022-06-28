@@ -13,6 +13,7 @@
 		<module>domain</module>
 		<module>interfaces</module>
         <module>order</module>
+        <module>notification</module>
     </modules>
     <parent>
 		<groupId>org.springframework.boot</groupId>

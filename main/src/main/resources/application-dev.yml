@@ -3,6 +3,17 @@ server:
     context-path: "/api"
 
 spring:
+  mail:
+    protocol: smtps
+    host: smtp.gmail.com
+    port: 465
+    username: maksimmenshikov1991@gmail.com
+    password: zkwkkrrormbgufcj
+    properties:
+      mail:
+        smtp:
+          auth: true
+
   servlet:
     multipart:
       max-request-size: 100MB
@@ -40,3 +51,7 @@ products:
 logging:
   level:
     ROOT: info
+
+notification:
+  email-from: noreply@annalyukina.com
+
