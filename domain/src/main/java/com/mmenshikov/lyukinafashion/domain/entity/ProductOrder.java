@@ -19,13 +19,15 @@ public class ProductOrder {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", updatable = false, insertable = false)
-    private Product product;
+    @JoinColumn(name = "product_size_id", updatable = false, insertable = false)
+    private ProductSize productSize;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @Column(name = "product_size_id")
+    private Long productSizeId;
+
+    private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "order_info_id")
+    private OrderInfo orderInfo;
 }

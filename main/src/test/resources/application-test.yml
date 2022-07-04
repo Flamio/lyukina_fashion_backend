@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/lyukina_fashion_store
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+
+  mail:
+    protocol: smtps
+    host: smtp.gmail.com
+    port: 465
+    username: test@gmail.com
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: true
+
+
+data-store:
+  path: "/"
+
+security:
+  admin:
+    login: test
+    password: test
+
+notification:
+  email-from: test@mail.ru

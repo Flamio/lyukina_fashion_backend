@@ -10,6 +10,7 @@ import com.mmenshikov.lyukinafashion.product.repository.ProductRepository;
 import com.mmenshikov.lyukinafashion.product.repository.ProductSizeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,6 +73,12 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(productSize -> conversionService.convert(productSize, SizeDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductSize getProductSize(Long productId, Long sizeId) {
+        var productSizeOptional = productSizeRepository.findByProductIdAndSizeId(productId, sizeId);
+        return productSizeOptional.orElseThrow(() -> new NotFoundException(productId, sizeId));
     }
 
     @Override

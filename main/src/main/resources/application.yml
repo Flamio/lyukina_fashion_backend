@@ -24,6 +24,16 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  mail:
+    protocol:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth:
 
 data-store:
   path:
@@ -34,7 +44,7 @@ security:
     password:
 
 products:
-  items-on-page: 6
+  items-on-page:
 
 logging:
   level:

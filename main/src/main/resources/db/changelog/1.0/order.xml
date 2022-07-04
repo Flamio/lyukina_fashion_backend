@@ -41,4 +41,58 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="01.07.2022-refactorOrders" author="mmenshikov">
+
+        <addColumn tableName="order_data">
+            <column name="email" type="varchar(50)"/>
+        </addColumn>
+        <addColumn tableName="order_data">
+            <column name="contact_type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        
+        <dropColumn tableName="product_order" columnName="product_id"/>
+        <dropColumn tableName="product_order" columnName="order_id"/>
+        
+        <addColumn tableName="product_order">
+            <column name="order_info_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="product_order">
+            <column name="quantity" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="product_order">
+            <column name="product_size_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="product_order" baseColumnNames="order_info_id"
+                                 constraintName="product_order_order_info_fk"
+                                 referencedTableName="order_data"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="product_order" baseColumnNames="product_size_id"
+                                 constraintName="product_order_product_size_fk"
+                                 referencedTableName="product_size"
+                                 referencedColumnNames="id"/>
+
+        <renameTable oldTableName="order_data" newTableName="order_info"/>
+    </changeSet>
+    <changeSet id="26.05.2022-addContactNameAndDateTime" author="mmenshikov">
+        <addColumn tableName="order_info">
+            <column name="date_time" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -37,7 +37,7 @@ public class ImageServiceImpl implements ImageService {
     public Resource get(final String path) {
         final Path fullPath = Path.of(storeConfiguration.getPath(), path);
 
-        log.info("downloading image {}", fullPath);
+        log.debug("downloading image {}", fullPath);
 
         try {
             return new InputStreamResource(new FileInputStream(fullPath.toString()));

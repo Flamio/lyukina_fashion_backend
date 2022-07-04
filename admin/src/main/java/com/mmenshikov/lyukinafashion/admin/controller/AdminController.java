@@ -2,6 +2,7 @@ package com.mmenshikov.lyukinafashion.admin.controller;
 
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
 import com.mmenshikov.lyukinafashion.admin.service.AdminService;
+import com.mmenshikov.lyukinafashion.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import lombok.RequiredArgsConstructor;
@@ -51,5 +52,10 @@ public class AdminController {
     @PostMapping("category")
     public Long addCategory(@RequestBody CategoryForm categoryForm) {
         return adminService.addCategory(categoryForm);
+    }
+
+    @GetMapping("category")
+    public List<CategoryDto> getAllCategories() {
+        return adminService.getAllCategories();
     }
 }

@@ -1,6 +1,7 @@
 package com.mmenshikov.lyukinafashion.admin.service;
 
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
+import com.mmenshikov.lyukinafashion.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
@@ -127,5 +128,9 @@ public class AdminService {
         }
 
         productService.saveProduct(productForm);
+    }
+
+    public List<CategoryDto> getAllCategories() {
+        return categoryService.getAll();
     }
 }

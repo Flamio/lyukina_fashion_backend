@@ -1,9 +1,11 @@
 package com.mmenshikov.lyukinafashion.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 
@@ -12,22 +14,26 @@ import java.util.List;
 @Validated
 public class OrderFormDto {
 
-    @NotBlank
+    @NotNull
+    @Valid
     private List<Product> products;
 
-    @NotBlank
+    @NotNull
+    @Valid
     private Info info;
 
     @Data
     @Accessors(chain = true)
     @Validated
     public static class Product {
-        @NotBlank
+        @NotNull
         @Min(1)
+        @JsonProperty("product_id")
         private Long productId;
 
-        @NotBlank
+        @NotNull
         @Min(1)
+        @JsonProperty("size_id")
         private Long sizeId;
 
         @NotNull
@@ -47,10 +53,18 @@ public class OrderFormDto {
         @NotBlank
         private String phone;
 
-        @NotBlank
+        @NotNull
+        @NotEmpty
         private String address;
 
-        @NotBlank
+        @NotNull
+        @NotEmpty
+        @JsonProperty("contact_type")
         private String contactType;
+
+        @NotNull
+        @NotEmpty
+        @JsonProperty("contact_name")
+        private String contactName;
     }
 }
