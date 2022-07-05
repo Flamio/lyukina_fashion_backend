@@ -100,7 +100,7 @@ public class ImageServiceImpl implements ImageService {
 
         var storageObject = new StorageObject()
                 .setPath(imagePath.toString())
-                .setApiPath(imageApiPath)
+                .setApiPath(imageApiPath.replace('\\', '/'))
                 .setProductId(productId)
                 .setPurpose(purpose);
 

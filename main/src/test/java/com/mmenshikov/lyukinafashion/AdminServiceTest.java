@@ -5,8 +5,6 @@ import com.mmenshikov.lyukinafashion.admin.service.AdminService;
 import com.mmenshikov.lyukinafashion.category.repository.CategoryRepository;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
-import com.mmenshikov.lyukinafashion.domain.entity.ProductSize;
-import com.mmenshikov.lyukinafashion.interfaces.ProductService;
 import com.mmenshikov.lyukinafashion.product.repository.ProductRepository;
 import com.mmenshikov.lyukinafashion.product.repository.ProductSizeRepository;
 import com.mmenshikov.lyukinafashion.storage.repository.StorageObjectRepository;
