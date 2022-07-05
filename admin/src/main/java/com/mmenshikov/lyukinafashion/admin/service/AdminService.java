@@ -52,8 +52,6 @@ public class AdminService {
         imageService.uploadImages(List.of(cartThumb), productId, ProductObjectPurpose.CART_THUMB);
         imageService.uploadImages(thumbs, productId, ProductObjectPurpose.THUMB);
         imageService.uploadImages(bigPics, productId, ProductObjectPurpose.BIG_PICTURE);
-
-
     }
 
     public Long addCategory(final CategoryForm categoryForm) {
