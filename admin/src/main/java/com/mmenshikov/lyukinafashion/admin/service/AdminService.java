@@ -47,11 +47,12 @@ public class AdminService {
 
         var productId = productService.saveProduct(productForm);
 
+        var newFolderName = UUID.randomUUID().toString();
 
-        imageService.uploadImages(List.of(mainPic), productId, ProductObjectPurpose.MAIN_PICTURE);
-        imageService.uploadImages(List.of(cartThumb), productId, ProductObjectPurpose.CART_THUMB);
-        imageService.uploadImages(thumbs, productId, ProductObjectPurpose.THUMB);
-        imageService.uploadImages(bigPics, productId, ProductObjectPurpose.BIG_PICTURE);
+        imageService.uploadImages(List.of(mainPic), productId, newFolderName, ProductObjectPurpose.MAIN_PICTURE);
+        imageService.uploadImages(List.of(cartThumb), productId, newFolderName, ProductObjectPurpose.CART_THUMB);
+        imageService.uploadImages(thumbs, productId, newFolderName, ProductObjectPurpose.THUMB);
+        imageService.uploadImages(bigPics, productId, newFolderName, ProductObjectPurpose.BIG_PICTURE);
     }
 
     public Long addCategory(final CategoryForm categoryForm) {

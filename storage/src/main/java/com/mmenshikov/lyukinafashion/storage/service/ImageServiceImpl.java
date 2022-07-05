@@ -49,9 +49,8 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void uploadImages(final List<MultipartFile> images,
                              final Long productId,
+                             final String newFolderName,
                              final ProductObjectPurpose purpose) {
-
-        var newFolderName = UUID.randomUUID().toString();
         final Path storePath = Path.of(storeConfiguration.getPath(), newFolderName);
         createPath(storePath);
         images.forEach(file -> saveFile(file, storePath, newFolderName, productId, purpose));

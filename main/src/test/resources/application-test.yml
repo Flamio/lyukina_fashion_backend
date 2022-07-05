@@ -17,7 +17,7 @@ spring:
           auth: true
 
 data-store:
-  path: "\\pic_store"
+  path: "/pic_store"
 
 security:
   admin:
