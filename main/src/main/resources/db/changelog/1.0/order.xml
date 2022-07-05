@@ -42,16 +42,6 @@
         </addColumn>
     </changeSet>
     <changeSet id="01.07.2022-refactorOrders" author="mmenshikov">
-
-        <addColumn tableName="order_data">
-            <column name="email" type="varchar(50)"/>
-        </addColumn>
-        <addColumn tableName="order_data">
-            <column name="contact_type" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-        
         <dropColumn tableName="product_order" columnName="product_id"/>
         <dropColumn tableName="product_order" columnName="order_id"/>
         
@@ -85,7 +75,7 @@
 
         <renameTable oldTableName="order_data" newTableName="order_info"/>
     </changeSet>
-    <changeSet id="26.05.2022-addContactNameAndDateTime" author="mmenshikov">
+    <changeSet id="01.07.2022-addContactNameAndDateTime" author="mmenshikov">
         <addColumn tableName="order_info">
             <column name="date_time" type="timestamp">
                 <constraints nullable="false"/>

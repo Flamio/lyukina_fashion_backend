@@ -17,12 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +31,7 @@ public class ImageServiceImpl implements ImageService {
 
     private final StoreConfiguration storeConfiguration;
     private final StorageObjectRepository storageObjectRepository;
+    private final FileSystemService fileSystemService;
 
     public Resource get(final String path) {
         final Path fullPath = Path.of(storeConfiguration.getPath(), path);
@@ -76,7 +75,7 @@ public class ImageServiceImpl implements ImageService {
     private void deleteOldImages(List<StorageObject> objects) {
         objects.forEach(storageObject -> {
             try {
-                Files.delete(Path.of(storageObject.getPath()));
+                fileSystemService.delete(Path.of(storageObject.getPath()));
             } catch (IOException e) {
                 log.error("Failed to delete old image {}", storageObject.getPath(), e);
             }
@@ -92,7 +91,7 @@ public class ImageServiceImpl implements ImageService {
         final String imageName = UUID.randomUUID().toString();
         final Path imagePath = folderPath.resolve(imageName);
         try {
-            Files.copy(file.getInputStream(), imagePath);
+            fileSystemService.copy(file.getInputStream(), imagePath);
         } catch (IOException e) {
             throwUploadException(e);
         }
@@ -101,7 +100,7 @@ public class ImageServiceImpl implements ImageService {
 
         var storageObject = new StorageObject()
                 .setPath(imagePath.toString())
-                .setApiPath(imageApiPath.replace('\\', '/'))
+                .setApiPath(imageApiPath)
                 .setProductId(productId)
                 .setPurpose(purpose);
 
@@ -110,7 +109,7 @@ public class ImageServiceImpl implements ImageService {
 
     private void createPath(Path path) {
         try {
-            Files.createDirectories(path);
+            fileSystemService.createDirectories(path);
         } catch (IOException e) {
             throwUploadException(e);
         }

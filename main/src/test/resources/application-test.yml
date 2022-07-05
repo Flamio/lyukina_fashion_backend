@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/lyukina_fashion_store
+    url: jdbc:postgresql://localhost:5432/lyukina_fashion_store_test
     username: postgres
     driver-class-name: org.postgresql.Driver
     password: postgres
@@ -16,9 +16,8 @@ spring:
         smtp:
           auth: true
 
-
 data-store:
-  path: "/"
+  path: "\\pic_store"
 
 security:
   admin:
