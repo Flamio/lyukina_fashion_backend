@@ -1,9 +1,10 @@
 package com.mmenshikov.lyukinafashion;
 
-import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
+import com.mmenshikov.lyukinafashion.admin.dto.ProductUpdateDto;
 import com.mmenshikov.lyukinafashion.admin.service.AdminService;
 import com.mmenshikov.lyukinafashion.category.repository.CategoryRepository;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
+import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
 import com.mmenshikov.lyukinafashion.domain.entity.ProductObjectPurpose;
 import com.mmenshikov.lyukinafashion.product.repository.ProductRepository;
 import com.mmenshikov.lyukinafashion.product.repository.ProductSizeRepository;
@@ -100,7 +101,7 @@ public class AdminServiceTest {
                 MediaType.APPLICATION_OCTET_STREAM_VALUE,
                 "Hello, World!".getBytes());
 
-        var productDto = new ProductUploadDto()
+        var productDto = new ProductForm()
                 .setCategoryId(categoryId)
                 .setSizeIds(List.of(1L, 4L))
                 .setDescription("test")
@@ -173,7 +174,7 @@ public class AdminServiceTest {
         adminService.updateProduct(1L, null, null, new MockMultipartFile("thumb",
                 "hello.jpg",
                 MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                "Hello, World!".getBytes()), null, new ProductUploadDto()
+                "Hello, World!".getBytes()), null, new ProductUpdateDto()
                 .setName("123").setPrice(BigDecimal.ONE).setSizeIds(List.of(4L)));
 
         var products = productRepository.findAll();

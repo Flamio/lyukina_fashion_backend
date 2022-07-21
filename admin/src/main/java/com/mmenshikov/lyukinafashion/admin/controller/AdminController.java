@@ -1,10 +1,11 @@
 package com.mmenshikov.lyukinafashion.admin.controller;
 
-import com.mmenshikov.lyukinafashion.admin.dto.ProductUploadDto;
+import com.mmenshikov.lyukinafashion.admin.dto.ProductUpdateDto;
 import com.mmenshikov.lyukinafashion.admin.service.AdminService;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
+import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class AdminController {
                               @RequestPart("thumbs") List<MultipartFile> thumbs,
                               @RequestPart("main-pic") MultipartFile mainPic,
                               @RequestPart("cart-thumb") MultipartFile cartThumb,
-                              @RequestPart("product-dto") ProductUploadDto productDto
+                              @RequestPart("product-dto") ProductForm productDto
 
     ) {
         adminService.uploadProduct(bigPics, thumbs, mainPic, cartThumb, productDto);
@@ -43,7 +44,7 @@ public class AdminController {
             @RequestPart(name = "thumbs", required = false) List<MultipartFile> thumbs,
             @RequestPart(name = "main-pic", required = false) MultipartFile mainPic,
             @RequestPart(name = "cart-thumb", required = false) MultipartFile cartThumb,
-            @RequestPart(name = "product-dto", required = false) ProductUploadDto productDto
+            @RequestPart(name = "product-dto", required = false) ProductUpdateDto productDto
 
     ) {
         adminService.updateProduct(id, bigPics, thumbs, mainPic, cartThumb, productDto);

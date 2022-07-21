@@ -7,5 +7,4 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ErrorDto {
     private String error;
-    private String stackTrace;
 }

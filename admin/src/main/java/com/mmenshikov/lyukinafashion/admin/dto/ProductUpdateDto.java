@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class ProductUploadDto {
+public class ProductUpdateDto {
     private String name;
 
     private BigDecimal price;

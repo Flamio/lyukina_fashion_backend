@@ -1,5 +1,6 @@
 package com.mmenshikov.lyukinafashion.handler;
 
+import com.mmenshikov.lyukinafashion.domain.exception.BaseException;
 import com.mmenshikov.lyukinafashion.dto.ErrorDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,14 +15,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleException(Exception ex) {
+    @org.springframework.web.bind.annotation.ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorDto> handleException(BaseException ex) {
         var error = new ErrorDto()
-                .setError(ex.getLocalizedMessage())
-                .setStackTrace(Arrays.stream(ex.getStackTrace())
-                        .map(StackTraceElement::toString)
-                        .collect(Collectors.joining()));
+                .setError(ex.getLocalizedMessage());
         log.error(ex.getMessage(), ex);
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
