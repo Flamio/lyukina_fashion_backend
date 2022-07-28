@@ -19,5 +19,5 @@ public interface ProductService {
     ProductSize getProductSize(Long productId, Long sizeId);
     ProductDto getByPageName(final String pageName);
     List<ProductDto> getList(List<Long> ids);
-    Long saveProduct(final ProductForm productForm);
+    Long saveProduct(final ProductForm productForm, Long id);
 }

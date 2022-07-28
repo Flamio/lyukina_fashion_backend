@@ -15,7 +15,6 @@ public class ProductFormToProduct implements Converter<ProductForm, Product> {
                 .setIsNew(source.getIsNew())
                 .setName(source.getName())
                 .setPageName(source.getPageName())
-                .setPrice(source.getPrice())
-                .setId(source.getId());
+                .setPrice(source.getPrice());
     }
 }

@@ -1,5 +1,6 @@
 package com.mmenshikov.lyukinafashion.admin.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUpdateDto;
 import com.mmenshikov.lyukinafashion.admin.mapper.ProductMapper;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryDto;
@@ -12,6 +13,7 @@ import com.mmenshikov.lyukinafashion.interfaces.CategoryService;
 import com.mmenshikov.lyukinafashion.interfaces.ImageService;
 import com.mmenshikov.lyukinafashion.interfaces.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -30,15 +32,18 @@ public class AdminService {
   private final ProductService productService;
   private final CategoryService categoryService;
   private final ProductMapper productMapper;
+  private final ObjectMapper objectMapper;
 
   @Transactional
+  @SneakyThrows
   public void uploadProduct(final List<MultipartFile> bigPics,
       final List<MultipartFile> thumbs,
       final MultipartFile mainPic,
       final MultipartFile cartThumb,
-      final ProductForm productForm) {
+      final String productFormJson) {
 
-    var productId = productService.saveProduct(productForm);
+    var productForm = objectMapper.readValue(productFormJson, ProductForm.class);
+    var productId = productService.saveProduct(productForm, null);
 
     var newFolderName = UUID.randomUUID().toString();
 
@@ -59,13 +64,16 @@ public class AdminService {
   }
 
   @Transactional
-  public void updateProduct(final Long id,
-      final List<MultipartFile> bigPics,
+  @SneakyThrows
+  public void updateProduct(final List<MultipartFile> bigPics,
       final List<MultipartFile> thumbs,
       final MultipartFile mainPic,
       final MultipartFile cartThumb,
-      final ProductUpdateDto productDto) {
+      final String productDtoJson) {
 
+    var productDto = objectMapper.readValue(productDtoJson, ProductUpdateDto.class);
+
+    var id = productDto.getId();
     var existingProduct = productService.get(id);
     if (existingProduct == null) {
       var message = "product with id " + id + "not found";
@@ -73,9 +81,7 @@ public class AdminService {
       throw new BaseException(message);
     }
 
-    if (productDto != null) {
-      updateProduct(existingProduct, productDto);
-    }
+    updateProduct(existingProduct, productDto);
 
     if (mainPic != null) {
       imageService.updateImages(List.of(mainPic), id, ProductObjectPurpose.MAIN_PICTURE);
@@ -105,7 +111,7 @@ public class AdminService {
 
     productMapper.update(productForm, productUploadDto);
 
-    productService.saveProduct(productForm);
+    productService.saveProduct(productForm, productUploadDto.getId());
   }
 
   public List<CategoryDto> getAllCategories() {

@@ -110,13 +110,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public Long saveProduct(final ProductForm productForm) {
+    public Long saveProduct(final ProductForm productForm, final Long id) {
         final Product product = conversionService.convert(productForm, Product.class);
         if (product == null) {
             log.error("convert product failed");
             return null;
         }
 
+        product.setId(id);
         final Product savedProduct = productRepository.save(product);
 
         var productSizes = productSizeRepository.findAllByProductId(savedProduct.getId());

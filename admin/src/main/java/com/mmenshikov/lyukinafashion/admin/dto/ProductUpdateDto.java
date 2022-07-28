@@ -1,5 +1,6 @@
 package com.mmenshikov.lyukinafashion.admin.dto;
 
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -9,6 +10,9 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class ProductUpdateDto {
+    @NotNull
+    private Long id;
+
     private String name;
 
     private BigDecimal price;

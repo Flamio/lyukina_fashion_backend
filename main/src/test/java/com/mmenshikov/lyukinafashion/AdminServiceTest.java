@@ -1,5 +1,7 @@
 package com.mmenshikov.lyukinafashion;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mmenshikov.lyukinafashion.admin.dto.ProductUpdateDto;
 import com.mmenshikov.lyukinafashion.admin.service.AdminService;
 import com.mmenshikov.lyukinafashion.category.repository.CategoryRepository;
@@ -35,174 +37,179 @@ import java.util.stream.Stream;
 @ActiveProfiles("test")
 public class AdminServiceTest {
 
-    @Autowired
-    private AdminService adminService;
+  @Autowired
+  private AdminService adminService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+  @Autowired
+  private CategoryRepository categoryRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+  @Autowired
+  private ProductRepository productRepository;
 
-    @Autowired
-    private StorageObjectRepository storageObjectRepository;
+  @Autowired
+  private StorageObjectRepository storageObjectRepository;
 
-    @MockBean
-    private FileSystemService fileSystemService;
+  @MockBean
+  private FileSystemService fileSystemService;
 
-    @Autowired
-    private ProductSizeRepository productSizeRepository;
+  @Autowired
+  private ProductSizeRepository productSizeRepository;
 
-    @Test
-    @Transactional
-    public void createCategoryTest() {
-        var categoryForm = new CategoryForm()
-                .setIsNew(true)
-                .setName("test");
+  @Autowired
+  private ObjectMapper objectMapper;
 
-        adminService.addCategory(categoryForm);
+  @Test
+  @Transactional
+  public void createCategoryTest() {
+    var categoryForm = new CategoryForm()
+        .setIsNew(true)
+        .setName("test");
 
-        var categories = categoryRepository.findAll();
+    adminService.addCategory(categoryForm);
 
-        Assertions.assertThat(categories.size()).isEqualTo(1);
-        Assertions.assertThat(categories.get(0).getName()).isEqualTo("test");
-        Assertions.assertThat(categories.get(0).getIsNew()).isTrue();
-    }
+    var categories = categoryRepository.findAll();
 
-    @Test
-    @Transactional
-    public void createProductTest() {
+    Assertions.assertThat(categories.size()).isEqualTo(1);
+    Assertions.assertThat(categories.get(0).getName()).isEqualTo("test");
+    Assertions.assertThat(categories.get(0).getIsNew()).isTrue();
+  }
 
-        var category = new CategoryForm()
-                .setName("test")
-                .setIsNew(true);
+  @Test
+  @Transactional
+  public void createProductTest() throws JsonProcessingException {
 
-        var categoryId = adminService.addCategory(category);
+    var category = new CategoryForm()
+        .setName("test")
+        .setIsNew(true);
 
-        var thumbs = Stream.of(new MockMultipartFile("thumb",
-                        "hello.jpg",
-                        MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                        "Hello, World!".getBytes())).map(mockMultipartFile -> (MultipartFile) mockMultipartFile)
-                .collect(Collectors.toList());
+    var categoryId = adminService.addCategory(category);
 
-        var bigs = Stream.of(new MockMultipartFile("big",
-                        "hello.jpg",
-                        MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                        "Hello, World!".getBytes())).map(mockMultipartFile -> (MultipartFile) mockMultipartFile)
-                .collect(Collectors.toList());
+    var thumbs = Stream.of(new MockMultipartFile("thumb",
+            "hello.jpg",
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            "Hello, World!".getBytes())).map(mockMultipartFile -> (MultipartFile) mockMultipartFile)
+        .collect(Collectors.toList());
 
-        var mainPic = new MockMultipartFile("main",
-                "hello.jpg",
-                MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                "Hello, World!".getBytes());
+    var bigs = Stream.of(new MockMultipartFile("big",
+            "hello.jpg",
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            "Hello, World!".getBytes())).map(mockMultipartFile -> (MultipartFile) mockMultipartFile)
+        .collect(Collectors.toList());
 
-        var cartThumb = new MockMultipartFile("cartThumb",
-                "hello.jpg",
-                MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                "Hello, World!".getBytes());
+    var mainPic = new MockMultipartFile("main",
+        "hello.jpg",
+        MediaType.APPLICATION_OCTET_STREAM_VALUE,
+        "Hello, World!".getBytes());
 
-        var productDto = new ProductForm()
-                .setCategoryId(categoryId)
-                .setSizeIds(List.of(1L, 4L))
-                .setDescription("test")
-                .setPrice(BigDecimal.TEN)
-                .setName("test")
-                .setIsNew(true)
-                .setPageName("test_product");
+    var cartThumb = new MockMultipartFile("cartThumb",
+        "hello.jpg",
+        MediaType.APPLICATION_OCTET_STREAM_VALUE,
+        "Hello, World!".getBytes());
 
-        adminService.uploadProduct(thumbs, bigs, mainPic, cartThumb, productDto);
+    var productDto = new ProductForm()
+        .setCategoryId(categoryId)
+        .setSizeIds(List.of(1L, 4L))
+        .setDescription("test")
+        .setPrice(BigDecimal.TEN)
+        .setName("test")
+        .setIsNew(true)
+        .setPageName("test_product");
 
-        var products = productRepository.findAll();
+    var productDtoJson = objectMapper.writeValueAsString(productDto);
+    adminService.uploadProduct(thumbs, bigs, mainPic, cartThumb, productDtoJson);
 
-        var storageObjects = storageObjectRepository.findAll();
+    var products = productRepository.findAll();
 
-        var thumbsObjects = storageObjects.stream()
-                .filter(storageObject -> ProductObjectPurpose.THUMB.equals(storageObject.getPurpose()))
-                .collect(Collectors.toList());
+    var storageObjects = storageObjectRepository.findAll();
 
-        var bigPictureObjects = storageObjects.stream()
-                .filter(
-                        storageObject -> ProductObjectPurpose.BIG_PICTURE.equals(storageObject.getPurpose()))
-                .collect(Collectors.toList());
+    var thumbsObjects = storageObjects.stream()
+        .filter(storageObject -> ProductObjectPurpose.THUMB.equals(storageObject.getPurpose()))
+        .collect(Collectors.toList());
 
-        var cartPictureObjects = storageObjects.stream()
-                .filter(storageObject -> ProductObjectPurpose.CART_THUMB.equals(storageObject.getPurpose()))
-                .collect(Collectors.toList());
+    var bigPictureObjects = storageObjects.stream()
+        .filter(
+            storageObject -> ProductObjectPurpose.BIG_PICTURE.equals(storageObject.getPurpose()))
+        .collect(Collectors.toList());
 
-        var mainPictureObjects = storageObjects.stream()
-                .filter(
-                        storageObject -> ProductObjectPurpose.MAIN_PICTURE.equals(storageObject.getPurpose()))
-                .collect(Collectors.toList());
+    var cartPictureObjects = storageObjects.stream()
+        .filter(storageObject -> ProductObjectPurpose.CART_THUMB.equals(storageObject.getPurpose()))
+        .collect(Collectors.toList());
 
-        var productSizes = productSizeRepository.findAll();
+    var mainPictureObjects = storageObjects.stream()
+        .filter(
+            storageObject -> ProductObjectPurpose.MAIN_PICTURE.equals(storageObject.getPurpose()))
+        .collect(Collectors.toList());
 
-        Assertions.assertThat(productSizes.size())
-                .isEqualTo(2);
+    var productSizes = productSizeRepository.findAll();
 
-        Assertions.assertThat(products.size())
-                .isEqualTo(1);
+    Assertions.assertThat(productSizes.size())
+        .isEqualTo(2);
 
-        Assertions.assertThat(thumbsObjects.size())
-                .isEqualTo(1);
+    Assertions.assertThat(products.size())
+        .isEqualTo(1);
 
-        Assertions.assertThat(bigPictureObjects.size())
-                .isEqualTo(1);
+    Assertions.assertThat(thumbsObjects.size())
+        .isEqualTo(1);
 
-        Assertions.assertThat(cartPictureObjects.size())
-                .isEqualTo(1);
+    Assertions.assertThat(bigPictureObjects.size())
+        .isEqualTo(1);
 
-        Assertions.assertThat(mainPictureObjects.size())
-                .isEqualTo(1);
+    Assertions.assertThat(cartPictureObjects.size())
+        .isEqualTo(1);
 
+    Assertions.assertThat(mainPictureObjects.size())
+        .isEqualTo(1);
 
-        var thumbFolderPath = Path.of(thumbsObjects.get(0).getPath()).getParent();
-        var bigsFolderPath = Path.of(bigPictureObjects.get(0).getPath()).getParent();
-        var cartThumbFolderPath = Path.of(cartPictureObjects.get(0).getPath()).getParent();
-        var mainPicFolderPath = Path.of(mainPictureObjects.get(0).getPath()).getParent();
+    var thumbFolderPath = Path.of(thumbsObjects.get(0).getPath()).getParent();
+    var bigsFolderPath = Path.of(bigPictureObjects.get(0).getPath()).getParent();
+    var cartThumbFolderPath = Path.of(cartPictureObjects.get(0).getPath()).getParent();
+    var mainPicFolderPath = Path.of(mainPictureObjects.get(0).getPath()).getParent();
 
+    Assertions.assertThat(thumbFolderPath.toString())
+        .isEqualTo(bigsFolderPath.toString())
+        .isEqualTo(cartThumbFolderPath.toString())
+        .isEqualTo(mainPicFolderPath.toString());
+  }
 
-        Assertions.assertThat(thumbFolderPath.toString())
-                .isEqualTo(bigsFolderPath.toString())
-                .isEqualTo(cartThumbFolderPath.toString())
-                .isEqualTo(mainPicFolderPath.toString());
-    }
+  @Test
+  @Transactional
+  @Sql("/sql/insertProduct.sql")
+  public void updateProductTest() throws JsonProcessingException {
+    var productUpdateDto = new ProductUpdateDto()
+        .setId(1L)
+        .setName("123").setPrice(BigDecimal.ONE).setSizeIds(List.of(4L));
 
-    @Test
-    @Transactional
-    @Sql("/sql/insertProduct.sql")
-    public void updateProductTest() {
-        adminService.updateProduct(1L, null, null, new MockMultipartFile("thumb",
-                "hello.jpg",
-                MediaType.APPLICATION_OCTET_STREAM_VALUE,
-                "Hello, World!".getBytes()), null, new ProductUpdateDto()
-                .setName("123").setPrice(BigDecimal.ONE).setSizeIds(List.of(4L)));
+    adminService.updateProduct( null, null, new MockMultipartFile("thumb",
+        "hello.jpg",
+        MediaType.APPLICATION_OCTET_STREAM_VALUE,
+        "Hello, World!".getBytes()), null, objectMapper.writeValueAsString(productUpdateDto));
 
-        var products = productRepository.findAll();
+    var products = productRepository.findAll();
 
-        Assertions.assertThat(products.size())
-                .isEqualTo(1);
+    Assertions.assertThat(products.size())
+        .isEqualTo(1);
 
-        Assertions.assertThat(products.get(0).getName())
-                .isEqualTo("123");
-        Assertions.assertThat(products.get(0).getPrice())
-                .isEqualTo(BigDecimal.ONE);
+    Assertions.assertThat(products.get(0).getName())
+        .isEqualTo("123");
+    Assertions.assertThat(products.get(0).getPrice())
+        .isEqualTo(BigDecimal.ONE);
 
-        Assertions.assertThat(products.get(0).getDescription())
-                .isEqualTo("test_description");
+    Assertions.assertThat(products.get(0).getDescription())
+        .isEqualTo("test_description");
 
-        var productSizes = productSizeRepository.findAll();
-        Assertions.assertThat(productSizes.size())
-                .isEqualTo(1);
+    var productSizes = productSizeRepository.findAll();
+    Assertions.assertThat(productSizes.size())
+        .isEqualTo(1);
 
-        var storageObjects = storageObjectRepository.findAll();
-        Assertions.assertThat(storageObjects.size())
-                .isEqualTo(4);
+    var storageObjects = storageObjectRepository.findAll();
+    Assertions.assertThat(storageObjects.size())
+        .isEqualTo(4);
 
-        var mainPictureObjects = storageObjects.stream()
-                .filter(
-                        storageObject -> ProductObjectPurpose.MAIN_PICTURE.equals(storageObject.getPurpose()))
-                .collect(Collectors.toList());
-        Assertions.assertThat(mainPictureObjects.size())
-                .isEqualTo(1);
-    }
+    var mainPictureObjects = storageObjects.stream()
+        .filter(
+            storageObject -> ProductObjectPurpose.MAIN_PICTURE.equals(storageObject.getPurpose()))
+        .collect(Collectors.toList());
+    Assertions.assertThat(mainPictureObjects.size())
+        .isEqualTo(1);
+  }
 }

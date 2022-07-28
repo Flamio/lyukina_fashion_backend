@@ -6,8 +6,10 @@ import com.mmenshikov.lyukinafashion.domain.dto.CategoryDto;
 import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,44 +21,49 @@ import java.util.List;
 @Slf4j
 public class AdminController {
 
-    private final AdminService adminService;
+  private final AdminService adminService;
 
-    @GetMapping("products")
-    public List<ProductDto> getAllProducts() {
-        return adminService.getAllProducts();
-    }
+  @GetMapping("products")
+  public List<ProductDto> getAllProducts() {
+    return adminService.getAllProducts();
+  }
 
-    @PostMapping("products/upload")
-    public void uploadProduct(@RequestPart("big-pics") List<MultipartFile> bigPics,
-                              @RequestPart("thumbs") List<MultipartFile> thumbs,
-                              @RequestPart("main-pic") MultipartFile mainPic,
-                              @RequestPart("cart-thumb") MultipartFile cartThumb,
-                              @RequestPart("product-dto") ProductForm productDto
+  @PostMapping(value = "products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public void uploadProduct(@RequestPart("big-pics") List<MultipartFile> bigPics,
+      @RequestPart("thumbs") List<MultipartFile> thumbs,
+      @RequestPart("main-pic") MultipartFile mainPic,
+      @RequestPart("cart-thumb") MultipartFile cartThumb,
+      @Schema(
+          description = "ProductForm",
+          implementation = ProductForm.class)
+      @RequestPart("product-dto") String productDto
 
-    ) {
-        adminService.uploadProduct(bigPics, thumbs, mainPic, cartThumb, productDto);
-    }
+  ) {
+    adminService.uploadProduct(bigPics, thumbs, mainPic, cartThumb, productDto);
+  }
 
-    @PutMapping("products/{id}")
-    public void updateProduct(
-            @PathVariable Long id,
-            @RequestPart(name = "big-pics", required = false) List<MultipartFile> bigPics,
-            @RequestPart(name = "thumbs", required = false) List<MultipartFile> thumbs,
-            @RequestPart(name = "main-pic", required = false) MultipartFile mainPic,
-            @RequestPart(name = "cart-thumb", required = false) MultipartFile cartThumb,
-            @RequestPart(name = "product-dto", required = false) ProductUpdateDto productDto
+  @PutMapping(value = "products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public void updateProduct(
+      @RequestPart(name = "big-pics", required = false) List<MultipartFile> bigPics,
+      @RequestPart(name = "thumbs", required = false) List<MultipartFile> thumbs,
+      @RequestPart(name = "main-pic", required = false) MultipartFile mainPic,
+      @RequestPart(name = "cart-thumb", required = false) MultipartFile cartThumb,
+      @RequestPart(name = "product-dto", required = true) @Schema(
+          description = "ProductUpdateDto",
+          implementation = ProductUpdateDto.class)
+          String productDto
 
-    ) {
-        adminService.updateProduct(id, bigPics, thumbs, mainPic, cartThumb, productDto);
-    }
+  ) {
+    adminService.updateProduct(bigPics, thumbs, mainPic, cartThumb, productDto);
+  }
 
-    @PostMapping("category")
-    public Long addCategory(@RequestBody CategoryForm categoryForm) {
-        return adminService.addCategory(categoryForm);
-    }
+  @PostMapping("category")
+  public Long addCategory(@RequestBody CategoryForm categoryForm) {
+    return adminService.addCategory(categoryForm);
+  }
 
-    @GetMapping("category")
-    public List<CategoryDto> getAllCategories() {
-        return adminService.getAllCategories();
-    }
+  @GetMapping("category")
+  public List<CategoryDto> getAllCategories() {
+    return adminService.getAllCategories();
+  }
 }
