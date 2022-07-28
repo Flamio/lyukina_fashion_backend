@@ -2,6 +2,10 @@ server:
   servlet:
     context-path: "/api"
 
+swagger:
+  server-url:
+
+
 spring:
   servlet:
     multipart:

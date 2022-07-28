@@ -12,8 +12,11 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findProductsByIsNewTrue();
     Optional<Product> findByPageName(String pageName);
-    @Query("select p from Product p where id  in :ids")
+    @Query("select p from Product p where p.id  in :ids")
     List<Product> findAllByIds(List<Long> ids);
+
+    @Query("select p from Product p where p.id = :id")
+    Optional<Product> findProductById(Long id);
 
     Page<Product> findAllByCategoryId(Pageable pageable, Long categoryId);
 }

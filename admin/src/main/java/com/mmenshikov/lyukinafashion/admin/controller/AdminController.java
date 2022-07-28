@@ -7,6 +7,7 @@ import com.mmenshikov.lyukinafashion.domain.dto.CategoryForm;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductDto;
 import com.mmenshikov.lyukinafashion.domain.dto.ProductForm;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

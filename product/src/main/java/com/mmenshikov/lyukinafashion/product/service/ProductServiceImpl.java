@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto get(Long id) {
-        final Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        final Product product = productRepository.findProductById(id).orElseThrow(() -> new NotFoundException(id));
         return convertToDto(product);
     }
 
@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<SizeDto> getSizes(Long id) {
-        final Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        final Product product = productRepository.findProductById(id).orElseThrow(() -> new NotFoundException(id));
         return product.getProductSizes()
                 .stream()
                 .map(productSize -> conversionService.convert(productSize, SizeDto.class))
